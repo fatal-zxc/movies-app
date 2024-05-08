@@ -5,7 +5,11 @@ import './search-panel.css'
 
 function SearchPanel() {
   return (
-    <Input size="large" className="search" placeholder="Type to search..." />
+    <Input
+      size="large"
+      className="search"
+      placeholder="Type to search..."
+    />
   )
 }
 

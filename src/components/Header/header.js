@@ -16,8 +16,15 @@ const items = [
 function Header() {
   return (
     <header className="header">
-      <Flex gap="small" wrap="wrap" justify="center">
-        <Tabs defaultActiveKey="1" items={items} />
+      <Flex
+        gap="small"
+        wrap="wrap"
+        justify="center"
+      >
+        <Tabs
+          defaultActiveKey="1"
+          items={items}
+        />
       </Flex>
     </header>
   )

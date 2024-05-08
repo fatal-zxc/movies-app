@@ -17,7 +17,13 @@ function Footer() {
         },
       }}
     >
-      <Pagination className="pagintaion" itemActiveBg="#1890FF" size="small" defaultCurrent={1} total={50} />
+      <Pagination
+        className="pagintaion"
+        itemActiveBg="#1890FF"
+        size="small"
+        defaultCurrent={1}
+        total={50}
+      />
     </ConfigProvider>
   )
 }
