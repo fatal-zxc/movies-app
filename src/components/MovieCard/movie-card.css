@@ -50,3 +50,23 @@
   padding: 5px 8px;
   margin: 0;
 }
+
+@media only screen and (max-width: 500px) {
+  .card {
+    width: 390px;
+    height: 250px;
+    padding-left: 10px;
+  }
+
+  .poster {
+    width: 60px;
+    height: 90px;
+    margin-top: 10px;
+  }
+
+  .overview {
+    display: block;
+    width: 360px;
+    margin-top: 10px;
+  }
+}
