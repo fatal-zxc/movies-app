@@ -1,5 +1,7 @@
 import { Component } from 'react'
 import ReactDOM from 'react-dom/client'
+import { Online, Offline } from 'react-detect-offline'
+import { Alert } from 'antd'
 
 import './index.css'
 import Header from './components/Header'
@@ -20,14 +22,25 @@ class App extends Component {
   render() {
     const { mode, page } = this.state
     return (
-      <section className="moviesApp">
-        <Header mode={mode} />
-        <main className="main">
-          <SearchPanel />
-          <MoviesList page={page} />
-          <Footer />
-        </main>
-      </section>
+      <>
+        <Online>
+          <section className="moviesApp">
+            <Header mode={mode} />
+            <main className="main">
+              <SearchPanel />
+              <MoviesList page={page} />
+              <Footer />
+            </main>
+          </section>
+        </Online>
+        <Offline>
+          <Alert
+            type="error"
+            message="you are offline"
+            style={{ textAlign: 'center' }}
+          />
+        </Offline>
+      </>
     )
   }
 }

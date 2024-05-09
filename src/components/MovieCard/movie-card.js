@@ -22,18 +22,14 @@ export default class MovieCard extends Component {
   constructor() {
     super()
 
-    const { rate, overview } = this.state
-
-    this.state = {
-      rateRounded: (Math.round(rate * 10) / 10).toFixed(1),
-      overviewShort: overviewShorter(overview),
-    }
+    this.state = {}
   }
 
   render() {
     const mobile = document.body.clientWidth <= 500
-    const { title, poster, release } = this.props
-    const { rateRounded, overviewShort } = this.state
+    const { title, poster, release, rate, overview } = this.props
+    const rateRounded = (Math.round(rate * 10) / 10).toFixed(1)
+    const overviewShort = overviewShorter(overview)
 
     return (
       <Card

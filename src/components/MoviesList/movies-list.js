@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Flex } from 'antd'
+import { Flex, Spin, Alert } from 'antd'
 
 import './movies-list.css'
 import MovieCard from '../MovieCard'
@@ -11,27 +11,46 @@ export default class MoviesList extends Component {
 
     this.state = {
       data: [],
+      error: false,
+      loading: true,
     }
 
     MoviesApi.a = new MoviesApi()
 
-    this.cardsUpdate = () => {
-      MoviesApi.a.getMoviesList(1).then((res) => {
-        const newData = res.results.slice(0, 6)
-        this.setState({
-          data: newData,
-        })
+    this.onError = () => {
+      this.setState({
+        error: true,
       })
+    }
+
+    this.cardsUpdate = () => {
+      MoviesApi.a
+        .getMoviesList(1)
+        .then((res) => {
+          const newData = res.results.slice(0, 6)
+          this.setState({
+            data: newData,
+            loading: false,
+          })
+        })
+        .catch(this.onError)
     }
     this.cardsUpdate()
   }
 
   render() {
-    const { data } = this.state
-    let moviesCards
-    if (data.length === 0) {
-      moviesCards = null
-    } else {
+    const { data, error, loading } = this.state
+
+    const errorMesage = error ? (
+      <Alert
+        type="error"
+        message="this service is not available in your country"
+      />
+    ) : null
+    const spiner = loading && !error ? <Spin /> : null
+
+    let moviesCards = null
+    if (loading === false && error === false) {
       moviesCards = []
       for (let i = 0; i < 6; i += 1) {
         moviesCards.push(
@@ -46,6 +65,7 @@ export default class MoviesList extends Component {
         )
       }
     }
+
     return (
       <Flex
         wrap="wrap"
@@ -54,6 +74,8 @@ export default class MoviesList extends Component {
         gap={36}
       >
         {moviesCards}
+        {spiner}
+        {errorMesage}
       </Flex>
     )
   }
