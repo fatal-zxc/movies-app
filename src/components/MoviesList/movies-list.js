@@ -13,9 +13,10 @@ export default class MoviesList extends Component {
       data: [],
       error: false,
       loading: true,
+      empty: false,
     }
 
-    MoviesApi.a = new MoviesApi()
+    MoviesApi.list = new MoviesApi()
 
     this.onError = () => {
       this.setState({
@@ -24,16 +25,50 @@ export default class MoviesList extends Component {
     }
 
     this.cardsUpdate = (page) => {
-      MoviesApi.a
-        .getMoviesList(Math.ceil(page / 2))
-        .then((res) => {
-          const newData = res.results
-          this.setState({
-            data: newData,
-            loading: false,
+      const { search } = this.props
+      this.setState({
+        loading: true,
+        empty: false,
+      })
+      if (!search) {
+        MoviesApi.list
+          .getMoviesList(Math.ceil(page / 2))
+          .then((res) => {
+            const newData = res.results
+            if (newData.length === 0) {
+              this.setState({
+                empty: true,
+                loading: false,
+              })
+            } else {
+              this.setState({
+                data: newData,
+                loading: false,
+                empty: false,
+              })
+            }
           })
-        })
-        .catch(this.onError)
+          .catch(this.onError)
+      } else {
+        MoviesApi.list
+          .getMoviesByName(Math.ceil(page / 2), search)
+          .then((res) => {
+            const newData = res.results
+            if (newData.length === 0) {
+              this.setState({
+                empty: true,
+                loading: false,
+              })
+            } else {
+              this.setState({
+                data: newData,
+                loading: false,
+                empty: false,
+              })
+            }
+          })
+          .catch(this.onError)
+      }
     }
   }
 
@@ -43,27 +78,38 @@ export default class MoviesList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { page } = this.props
+    const { page, search } = this.props
     if ((page % 2 === 0 && prevProps.page + 1 === page) || (page % 2 === 1 && prevProps.page - 1 === page)) return
     if (page !== prevProps.page) {
+      this.cardsUpdate(page)
+    }
+    if (search !== prevProps.search) {
       this.cardsUpdate(page)
     }
   }
 
   render() {
-    const { data, error, loading } = this.state
+    const { data, error, loading, empty } = this.state
     const { page } = this.props
 
-    const errorMesage = error ? (
+    const errorMessage = error ? (
       <Alert
         type="error"
         message="this service is not available in your country"
       />
     ) : null
+
     const spiner = loading && !error ? <Spin /> : null
 
+    const emptyMessage = empty ? (
+      <Alert
+        type="error"
+        message="no results for search"
+      />
+    ) : null
+
     let moviesCards = null
-    if (loading === false && error === false) {
+    if (!loading && !error && !empty) {
       moviesCards = []
       const newData = page % 2 ? data.slice(0, 10) : data.slice(10, 20)
       newData.forEach((el) => {
@@ -89,7 +135,8 @@ export default class MoviesList extends Component {
       >
         {moviesCards}
         {spiner}
-        {errorMesage}
+        {errorMessage}
+        {emptyMessage}
       </Flex>
     )
   }

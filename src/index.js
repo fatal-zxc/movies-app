@@ -15,6 +15,7 @@ class App extends Component {
 
     this.state = {
       mode: 'Search',
+      search: '',
       page: 1,
     }
 
@@ -23,19 +24,31 @@ class App extends Component {
         page: newPage,
       })
     }
+
+    this.searchSend = (text) => {
+      this.setState({
+        search: text,
+      })
+    }
   }
 
   render() {
-    const { mode, page } = this.state
+    const { mode, page, search } = this.state
     return (
       <>
         <Online>
           <section className="moviesApp">
             <Header mode={mode} />
             <main className="main">
-              <SearchPanel />
-              <MoviesList page={page} />
-              <Footer pageUpdate={this.pageUpdate} />
+              <SearchPanel searchSend={this.searchSend} />
+              <MoviesList
+                page={page}
+                search={search}
+              />
+              <Footer
+                pageUpdate={this.pageUpdate}
+                search={search}
+              />
             </main>
           </section>
         </Online>

@@ -19,5 +19,22 @@ export default class MoviesApi {
       const json = await res.json()
       return json
     }
+
+    this.getMoviesByName = async (page, name) => {
+      const url = `https://api.themoviedb.org/3/search/movie?query=${name}&include_adult=false&language=en-US&page=${page}`
+      const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+      const res = await fetch(url, options)
+      if (!res.ok) {
+        throw new Error(`error: ${res.status}`)
+      }
+      const json = await res.json()
+      return json
+    }
   }
 }

@@ -6,6 +6,7 @@ import './movie-card.css'
 
 function overviewShorter(text) {
   let space
+  if (text === '') return ''
   for (let i = 190; i < text.length; i += 1) {
     if (text[i] === ' ') {
       space = i
@@ -58,7 +59,7 @@ export default class MovieCard extends Component {
               type="secondary"
               style={{ marginBottom: 7, fontSize: 12 }}
             >
-              {`${format(release, 'MMMM d')}, ${format(release, 'y')}`}
+              {release ? `${format(release, 'MMMM d')}, ${format(release, 'y')}` : 'no data'}
             </Text>
             <Space style={{ marginBottom: 7 }}>
               <Text className="genre">Action</Text>
