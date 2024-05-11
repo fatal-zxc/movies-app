@@ -17,6 +17,12 @@ class App extends Component {
       mode: 'Search',
       page: 1,
     }
+
+    this.pageUpdate = (newPage) => {
+      this.setState({
+        page: newPage,
+      })
+    }
   }
 
   render() {
@@ -29,7 +35,7 @@ class App extends Component {
             <main className="main">
               <SearchPanel />
               <MoviesList page={page} />
-              <Footer />
+              <Footer pageUpdate={this.pageUpdate} />
             </main>
           </section>
         </Online>

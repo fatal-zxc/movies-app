@@ -6,7 +6,7 @@ import './movie-card.css'
 
 function overviewShorter(text) {
   let space
-  for (let i = 270; i < text.length; i += 1) {
+  for (let i = 190; i < text.length; i += 1) {
     if (text[i] === ' ') {
       space = i
       break

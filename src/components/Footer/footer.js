@@ -3,7 +3,7 @@ import { ConfigProvider, Pagination } from 'antd'
 
 import './footer.css'
 
-function Footer() {
+function Footer({ pageUpdate }) {
   return (
     <ConfigProvider
       theme={{
@@ -22,7 +22,9 @@ function Footer() {
         itemActiveBg="#1890FF"
         size="small"
         defaultCurrent={1}
-        total={50}
+        total={5000}
+        showSizeChanger={false}
+        onChange={pageUpdate}
       />
     </ConfigProvider>
   )

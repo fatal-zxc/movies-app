@@ -23,11 +23,11 @@ export default class MoviesList extends Component {
       })
     }
 
-    this.cardsUpdate = () => {
+    this.cardsUpdate = (page) => {
       MoviesApi.a
-        .getMoviesList(1)
+        .getMoviesList(Math.ceil(page / 2))
         .then((res) => {
-          const newData = res.results.slice(0, 6)
+          const newData = res.results
           this.setState({
             data: newData,
             loading: false,
@@ -35,11 +35,24 @@ export default class MoviesList extends Component {
         })
         .catch(this.onError)
     }
-    this.cardsUpdate()
+  }
+
+  componentDidMount() {
+    const { page } = this.props
+    this.cardsUpdate(page)
+  }
+
+  componentDidUpdate(prevProps) {
+    const { page } = this.props
+    if ((page % 2 === 0 && prevProps.page + 1 === page) || (page % 2 === 1 && prevProps.page - 1 === page)) return
+    if (page !== prevProps.page) {
+      this.cardsUpdate(page)
+    }
   }
 
   render() {
     const { data, error, loading } = this.state
+    const { page } = this.props
 
     const errorMesage = error ? (
       <Alert
@@ -52,18 +65,19 @@ export default class MoviesList extends Component {
     let moviesCards = null
     if (loading === false && error === false) {
       moviesCards = []
-      for (let i = 0; i < 6; i += 1) {
+      const newData = page % 2 ? data.slice(0, 10) : data.slice(10, 20)
+      newData.forEach((el) => {
         moviesCards.push(
           <MovieCard
-            title={data[i].title}
-            overview={data[i].overview}
-            poster={data[i].poster_path}
-            release={data[i].release_date}
-            rate={data[i].vote_average}
-            key={data[i].id}
+            title={el.title}
+            overview={el.overview}
+            poster={el.poster_path}
+            release={el.release_date}
+            rate={el.vote_average}
+            key={el.id}
           />
         )
-      }
+      })
     }
 
     return (
