@@ -19,9 +19,19 @@ export default class Footer extends Component {
       if (search) {
         MoviesApi.footer.getMoviesByName(1, search).then((res) => {
           const newTotalPages = res.total_pages * 20
-          this.setState({
-            totalPages: newTotalPages,
-          })
+          if (res.total_results === 0) {
+            this.setState({
+              totalPages: 0,
+            })
+          } else if (res.total_pages % 20 !== 0 && res.total_pages % 20 <= 10) {
+            this.setState({
+              totalPages: newTotalPages - 10,
+            })
+          } else {
+            this.setState({
+              totalPages: newTotalPages,
+            })
+          }
         })
       } else {
         this.setState({
