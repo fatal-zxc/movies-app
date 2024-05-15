@@ -109,19 +109,18 @@ export default class MoviesList extends Component {
     ) : null
 
     const newData = page % 2 ? data.slice(0, 10) : data.slice(10, 20)
-    const moviesCards =
-      !loading && !error && !empty
-        ? newData.map((el) => (
-            <MovieCard
-              title={el.title}
-              overview={el.overview}
-              poster={el.poster_path}
-              release={el.release_date}
-              rate={el.vote_average}
-              key={el.id}
-            />
-          ))
-        : null
+    const createCards = newData.map((el) => (
+      <MovieCard
+        title={el.title}
+        overview={el.overview}
+        poster={el.poster_path}
+        release={el.release_date}
+        rate={el.vote_average}
+        key={el.id}
+      />
+    ))
+    const moviesCondition = !loading && !error && !empty
+    const moviesCards = moviesCondition ? createCards : null
 
     return (
       <Flex
