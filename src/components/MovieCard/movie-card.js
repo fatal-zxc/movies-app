@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 
 import './movie-card.css'
 import MoviesApi from '../../services/movies-api'
+import { MoviesApiConsumer } from '../../services/movies-api-context'
 
 function overviewShorter(text) {
   let space
@@ -36,9 +37,15 @@ export default class MovieCard extends Component {
 
   render() {
     const mobile = document.body.clientWidth <= 500
-    const { title, poster, release, rate, overview, ratedMovies, id } = this.props
+    const { title, poster, release, rate, overview, ratedMovies, id, genresIds } = this.props
     const rateRounded = (Math.round(rate * 10) / 10).toFixed(1)
     const overviewShort = overviewShorter(overview)
+
+    const genresElements = genresIds.map((genreId) => (
+      <MoviesApiConsumer key={genreId}>
+        {(genres) => <Text className="genre">{genres.find((genre) => genre.id === genreId).name}</Text>}
+      </MoviesApiConsumer>
+    ))
 
     return (
       <Card
@@ -69,10 +76,7 @@ export default class MovieCard extends Component {
             >
               {release ? `${format(release, 'MMMM d')}, ${format(release, 'y')}` : 'no data'}
             </Text>
-            <Space style={{ marginBottom: 7 }}>
-              <Text className="genre">Action</Text>
-              <Text className="genre">Drama</Text>
-            </Space>
+            <Space style={{ marginBottom: 7 }}>{genresElements}</Space>
             {!mobile ? <Text className="overview">{overviewShort}</Text> : null}
             <Rate
               defaultValue={ratedMovies[id]}

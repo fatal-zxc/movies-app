@@ -136,6 +136,7 @@ export default class MoviesList extends Component {
         changeRate={changeRate}
         onError={onError}
         ratedMovies={ratedMovies}
+        genresIds={el.genre_ids}
         key={el.id}
       />
     ))

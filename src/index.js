@@ -9,6 +9,7 @@ import MoviesList from './components/MoviesList'
 import SearchPanel from './components/SearchPanel'
 import Footer from './components/Footer'
 import MoviesApi from './services/movies-api'
+import { MoviesApiProvider } from './services/movies-api-context'
 
 class App extends Component {
   constructor() {
@@ -21,6 +22,7 @@ class App extends Component {
       sessionId: 0,
       ratedMovies: {},
       error: false,
+      genres: 123,
     }
 
     MoviesApi.app = new MoviesApi()
@@ -75,14 +77,26 @@ class App extends Component {
         }
       })
     }
+
+    this.updateGenres = () => {
+      MoviesApi.app
+        .getGenres()
+        .then((res) => {
+          this.setState({
+            genres: res,
+          })
+        })
+        .catch(this.onError)
+    }
   }
 
   componentDidMount() {
     this.createSession()
+    this.updateGenres()
   }
 
   render() {
-    const { mode, page, search, sessionId, error, ratedMovies } = this.state
+    const { mode, page, search, sessionId, error, ratedMovies, genres } = this.state
 
     const errorMessage = error ? (
       <Alert
@@ -119,8 +133,10 @@ class App extends Component {
     return (
       <>
         <Online>
-          {moviesApp}
-          {errorMessage}
+          <MoviesApiProvider value={genres}>
+            {moviesApp}
+            {errorMessage}
+          </MoviesApiProvider>
         </Online>
         <Offline>
           <Alert
