@@ -71,7 +71,8 @@ class App extends Component {
     this.changeRate = (value, id) => {
       this.setState(({ ratedMovies }) => {
         const newRatedMovies = JSON.parse(JSON.stringify(ratedMovies))
-        newRatedMovies[id] = value
+        if (value === 0) delete newRatedMovies[id]
+        else newRatedMovies[id] = value
         return {
           ratedMovies: newRatedMovies,
         }

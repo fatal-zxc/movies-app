@@ -106,5 +106,23 @@ export default class MoviesApi {
       const json = await res.json()
       return json.genres
     }
+
+    this.deleteRating = async (sessionId, movieId) => {
+      const url = `https://api.themoviedb.org/3/movie/${movieId}/rating?guest_session_id=${sessionId}`
+      const options = {
+        method: 'DELETE',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json;charset=utf-8',
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+      const res = await fetch(url, options)
+      if (!res.ok) {
+        throw new Error(`error: ${res.status}`)
+      }
+      const json = await res.json()
+      return json
+    }
   }
 }
