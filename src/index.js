@@ -107,11 +107,13 @@ class App extends Component {
       />
     ) : null
 
+    const searchPanel = mode === 'Search' ? <SearchPanel searchSend={this.searchSend} /> : null
+
     const moviesApp = !error ? (
       <section className="moviesApp">
         <Header changeMode={this.changeMode} />
         <main className="main">
-          <SearchPanel searchSend={this.searchSend} />
+          {searchPanel}
           <MoviesList
             page={page}
             search={search}
