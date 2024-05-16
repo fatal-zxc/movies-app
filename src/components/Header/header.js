@@ -13,7 +13,7 @@ const items = [
   },
 ]
 
-function Header() {
+function Header({ changeMode }) {
   return (
     <header className="header">
       <Flex
@@ -24,6 +24,7 @@ function Header() {
         <Tabs
           defaultActiveKey="1"
           items={items}
+          onChange={changeMode}
         />
       </Flex>
     </header>

@@ -15,10 +15,30 @@ export default class Footer extends Component {
     MoviesApi.footer = new MoviesApi()
 
     this.updatePages = () => {
-      const { search } = this.props
-      if (search) {
+      const { search, mode, sessionId } = this.props
+      if (mode === 'Rated') {
+        MoviesApi.footer
+          .getRatedMovies(sessionId, 1)
+          .then((res) => {
+            const newTotalPages = res.total_pages * 20
+            if (res.total_results % 20 !== 0 && res.total_results % 20 <= 10) {
+              this.setState({
+                totalPages: newTotalPages - 10,
+              })
+            } else {
+              this.setState({
+                totalPages: newTotalPages,
+              })
+            }
+          })
+          .catch(() => {
+            this.setState({
+              totalPages: 10,
+            })
+          })
+      } else if (search) {
         MoviesApi.footer.getMoviesByName(1, search).then((res) => {
-          const newTotalPages = res.total_pages * 20
+          const newTotalPages = res.total_pages === 1 ? 10 : res.total_pages * 20
           if (res.total_results % 20 !== 0 && res.total_results % 20 <= 10) {
             this.setState({
               totalPages: newTotalPages - 10,
@@ -42,8 +62,11 @@ export default class Footer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { search } = this.props
+    const { search, mode } = this.props
     if (search !== prevProps.search) {
+      this.updatePages()
+    }
+    if (mode !== prevProps.mode) {
       this.updatePages()
     }
   }

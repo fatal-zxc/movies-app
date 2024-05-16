@@ -36,5 +36,58 @@ export default class MoviesApi {
       const json = await res.json()
       return json
     }
+
+    this.createGuestSession = async () => {
+      const url = 'https://api.themoviedb.org/3/authentication/guest_session/new'
+      const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+      const res = await fetch(url, options)
+      if (!res.ok) {
+        throw new Error(`error: ${res.status}`)
+      }
+      const json = await res.json()
+      return json.guest_session_id
+    }
+
+    this.addRating = async (sessionId, movieId, rating) => {
+      const url = `https://api.themoviedb.org/3/movie/${movieId}/rating?guest_session_id=${sessionId}`
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+          accept: 'application/json',
+          Authorization: `Bearer ${apiToken}`,
+        },
+        body: `{"value":${rating}}`,
+      }
+      const res = await fetch(url, options)
+      if (!res.ok) {
+        throw new Error(`error: ${res.status}`)
+      }
+      const json = await res.json()
+      return json
+    }
+
+    this.getRatedMovies = async (sessionId, page) => {
+      const url = `https://api.themoviedb.org/3/guest_session/${sessionId}/rated/movies?language=en-US&page=${page}&sort_by=created_at.asc`
+      const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+      const res = await fetch(url, options)
+      if (!res.ok) {
+        throw new Error(`error: ${res.status}`)
+      }
+      const json = await res.json()
+      return json
+    }
   }
 }

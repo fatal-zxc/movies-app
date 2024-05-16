@@ -3,6 +3,7 @@ import { Card, Flex, Typography, Space, Rate } from 'antd'
 import { format } from 'date-fns'
 
 import './movie-card.css'
+import MoviesApi from '../../services/movies-api'
 
 function overviewShorter(text) {
   let space
@@ -24,11 +25,18 @@ export default class MovieCard extends Component {
     super()
 
     this.state = {}
+
+    MoviesApi.card = new MoviesApi()
+
+    this.changeRateWrap = (value) => {
+      const { sessionId, id, changeRate, onError } = this.props
+      MoviesApi.card.addRating(sessionId, id, value).then(changeRate(value, id)).catch(onError)
+    }
   }
 
   render() {
     const mobile = document.body.clientWidth <= 500
-    const { title, poster, release, rate, overview } = this.props
+    const { title, poster, release, rate, overview, ratedMovies, id } = this.props
     const rateRounded = (Math.round(rate * 10) / 10).toFixed(1)
     const overviewShort = overviewShorter(overview)
 
@@ -67,10 +75,9 @@ export default class MovieCard extends Component {
             </Space>
             {!mobile ? <Text className="overview">{overviewShort}</Text> : null}
             <Rate
-              allowHalf
-              disabled
-              defaultValue={rateRounded}
+              defaultValue={ratedMovies[id]}
               count={10}
+              onChange={this.changeRateWrap}
               className="stars"
             />
             <p className="rate">{rateRounded}</p>
